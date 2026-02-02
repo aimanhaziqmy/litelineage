@@ -1,9 +1,111 @@
 Metadata-Version: 2.4
 Name: litelineage
-Version: 0.1.0
+Version: 0.1.2
 Summary: A decorator-based data lineage tracker.
 Author-email: Aiman Haziq <aimanhaziqyazik@gmail.com>
 Requires-Python: >=3.7
 Description-Content-Type: text/markdown
 License-File: LICENSE
 Dynamic: license-file
+
+# LiteLineage 🕸️
+
+**Zero-Infrastructure Data Lineage for Python.**
+
+LiteLineage is a lightweight, decorator-based library that tracks data dependencies in your Python pipelines. It stores lineage metadata in a local SQLite file and generates professional Mermaid.js graphs instantly.
+
+**Perfect for:** Solo Data Engineers, Local ETL scripts, and POCs where setting up DataHub or Amundsen is overkill.
+
+## 🚀 Key Features
+
+* **Zero Setup:** No servers to run. Just install and import.
+* **Decorator Driven:** Add `@tracker.track` to your existing functions.
+* **Visual Graphs:** Auto-generates an HTML interactive graph of your data flow.
+* **Standard Tech:** Uses SQLite for storage and Mermaid.js for rendering.
+
+## 📦 Installation
+
+```bash
+pip install litelineage
+
+```
+
+## ⚡ Quick Start
+
+### 1. Track Your Functions
+
+Import the `tracker` and use the decorator. You simply declare what the function reads (`inputs`) and what it creates (`outputs`).
+
+```python
+import time
+from litelineage import tracker
+
+# Example: Ingesting data
+@tracker.track(inputs=["s3://raw-bucket/users.csv"], outputs=["local/users_clean.parquet"])
+def clean_users():
+    print("Cleaning user data...")
+    time.sleep(1)
+
+# Example: Creating a report
+@tracker.track(inputs=["local/users_clean.parquet"], outputs=["reports/daily_users.pdf"])
+def generate_report():
+    print("Generating PDF...")
+    time.sleep(1)
+
+if __name__ == "__main__":
+    clean_users()
+    generate_report()
+    print("Pipeline finished!")
+
+```
+
+### 2. View the Lineage
+
+After running your script, a `lineage.db` file is created automatically. To see the graph, run the CLI command:
+
+```bash
+litelineage-show
+
+```
+
+This will generate `lineage.html`. Open it in your browser to see your data flow diagram.
+
+Open your browser :
+
+```bash
+python -m http.server 8000
+```
+
+## 🛠️ CLI Reference
+
+The package includes a command-line tool to visualize your database.
+
+```bash
+# Default (looks for lineage.db in current folder)
+litelineage-show
+
+# Specify custom file paths (Python usage)
+# python -m litelineage.visualizer --db my_custom.db --out my_graph.html
+
+```
+
+## 📖 How It Works
+
+1. **Capture:** When a decorated function finishes successfully, `LiteLineage` logs a row to a local SQLite file (`lineage.db`).
+2. **Store:** It records the `timestamp`, `function_name`, `input_asset`, and `output_asset`.
+3. **Visualize:** The visualizer reads the SQLite rows and converts them into Mermaid.js syntax (standard "Flowchart" logic), creating a standalone HTML file you can share with stakeholders.
+
+## 🛡️ FAQ
+
+**Q: Does it affect performance?**
+A: Negligible. It performs one quick SQLite write *after* your function finishes.
+
+**Q: Can I use it in production?**
+A: Yes. Since it uses SQLite, it works perfectly on single-node Airflow, cron jobs, or containerized scripts. For distributed systems (Spark/Databricks), a centralized DB would be needed (roadmap feature).
+
+---
+
+### **License**
+
+MIT License. Free to use for personal and commercial projects.
+

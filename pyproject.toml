@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "litelineage"
-version = "0.1.0"
+version = "0.1.2"
 description = "A decorator-based data lineage tracker."
 readme = "README.md"
 requires-python = ">=3.7"
