@@ -16,7 +16,7 @@ LiteLineage is a lightweight, decorator-based library that tracks data dependenc
 ## 📦 Installation
 
 ```bash
-pip install litelineage-aimanhaziq
+pip install litelineage
 
 ```
 
@@ -59,6 +59,12 @@ litelineage-show
 ```
 
 This will generate `lineage.html`. Open it in your browser to see your data flow diagram.
+
+Open your browser :
+
+```bash
+python -m http.server 8000
+```
 
 ## 🛠️ CLI Reference
 
