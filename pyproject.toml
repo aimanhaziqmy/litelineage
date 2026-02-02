@@ -1,0 +1,15 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "litelineage"
+version = "0.1.0"
+description = "A decorator-based data lineage tracker."
+readme = "README.md"
+requires-python = ">=3.7"
+authors = [{ name="Aiman Haziq", email="aimanhaziqyazik@gmail.com" }]
+
+[project.scripts]
+# This allows users to run "litelineage-show" from the terminal
+litelineage-show = "litelineage.visualizer:generate_graph"
